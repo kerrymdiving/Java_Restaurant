@@ -6,18 +6,18 @@ import java.sql.Statement;
 public class App {
     public static void main(String[] args) throws Exception {
        new DB("jdbc:sqlite:./database.sqlite"); // can have relative or absolute address
-        PreparedStatement insertCafe = DB.conn.prepareStatement("INSERT INTO cafes (name) VALUES (?);");
-        // PreparedStatement insertCafe = DB.conn.prepareStatement("INSERT INTO cafes (name, imageURL) VALUES (?, ?);");
+       PreparedStatement insertCafe = DB.conn.prepareStatement("INSERT INTO cafes (name) VALUES (?);");
+ //       PreparedStatement insertCafe = DB.conn.prepareStatement("INSERT INTO cafes (name, imageURL) VALUES (?, ?);");
 
-        // String[] cafes = {
-        //     "Simons",
-        //     "Jazz cafe",
-        //     "Minnies"
-        // };
-        // for(String cafe : cafes) {
-        //     insertCafe.setString(1, cafe);
-        //     insertCafe.executeUpdate(); // this will update table and insert row
-        // }
+        String[] cafes = {
+            "Simons",
+            "Jazz cafe",
+            "Minnies"
+        };
+        for(String cafe : cafes) {
+            insertCafe.setString(1, cafe);
+            insertCafe.executeUpdate(); // this will update table and insert row
+        }
         Statement getAllCafes = DB.conn.createStatement();
         PreparedStatement getOneCafe = DB.conn.prepareStatement("SELECT * FROM cafes WHERE id = ?;");
         try {
