@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Items {
+    private int menu_id;
     private String item_name;
     private double price;
     private int id;
@@ -12,27 +13,30 @@ public class Items {
     public static void init() {
         try {
             Statement createTable = DB.conn.createStatement();
-            createTable.execute("CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY, item_name TEXT, price DOUBLE);");
+            createTable.execute("CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY, menu_id INTEGER, item_name TEXT, price DOUBLE);");
             Statement getItems = DB.conn.createStatement();
             ResultSet items = getItems.executeQuery("SELECT * FROM items;");
             while (items.next()) {
                 int id = items.getInt(1);
-                String item_name = items.getString(2);
-                double price = items.getDouble(3);
-                new Items(id, item_name, price);
+                int menu_id = items.getInt(2);
+                String item_name = items.getString(3);
+                double price = items.getDouble(4);
+                new Items(id, menu_id, item_name, price);
             }
         } catch (SQLException error) {
             System.out.println("£" + error.getMessage());
         }
     }
 
-    public Items(String item_name, double price) {
+    public Items(int menu_id, String item_name, double price) {
+        this.menu_id = menu_id;
         this.item_name = item_name;
         this.price = price;
         try {
-            PreparedStatement insertItems = DB.conn.prepareStatement("INSERT INTO items (item_name, price) VALUES (?, ?);");
-            insertItems.setString(1, this.item_name);
-            insertItems.setDouble(2, this.price);
+            PreparedStatement insertItems = DB.conn.prepareStatement("INSERT INTO items (menu_id, item_name, price) VALUES (?, ?, ?);");
+            insertItems.setInt(1, menu_id);
+            insertItems.setString(2, this.item_name);
+            insertItems.setDouble(3, this.price);
             insertItems.executeUpdate();
             this.id = insertItems.getGeneratedKeys().getInt(1);
         } catch (SQLException error) {
@@ -41,8 +45,9 @@ public class Items {
         }
     }
 
-    public Items(int id, String item_name, double price) {
+    public Items(int id, int menu_id, String item_name, double price) {
         this.id = id;
+        this.menu_id = menu_id;
         this.item_name = item_name;
         this.price = price;
     }
